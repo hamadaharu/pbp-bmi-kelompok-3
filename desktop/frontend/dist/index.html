@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropometric BMI — Clinical Index Calculator</title>
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hubungkan ke file CSS eksternal -->
+  <link rel="stylesheet" crossorigin href="/assets/index-Be55dcnR.css">
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- Top Header -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">Anthropometric Index</div>
+                <div class="brand-subtitle">Kalkulator Indeks Massa Tubuh &amp; Evaluasi Berat Ideal</div>
+            </div>
+        </div>
+        <div class="std-badge">Standar Klinis WHO</div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="bento-grid">
+        <!-- Left Column: Input Parameters -->
+        <section class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Parameter Tubuh</span>
+            </div>
+
+            <div class="presets-bar">
+                <button type="button" class="preset-chip mono" onclick="isiPreset(165, 48)">165cm / 48kg</button>
+                <button type="button" class="preset-chip mono" onclick="isiPreset(170, 65)">170cm / 65kg</button>
+                <button type="button" class="preset-chip mono" onclick="isiPreset(168, 78)">168cm / 78kg</button>
+            </div>
+
+            <div id="errorBox" class="alert-error">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="errorText">Input tidak valid.</span>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="tinggiInput">
+                    <span>Tinggi Badan</span>
+                    <span class="field-hint mono">50 – 250 cm</span>
+                </label>
+                <div class="input-box">
+                    <input type="number" id="tinggiInput" placeholder="Masukkan tinggi" min="50" max="250" step="1" value="170">
+                    <span class="unit-tag mono">cm</span>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="beratInput">
+                    <span>Berat Badan</span>
+                    <span class="field-hint mono">10 – 300 kg</span>
+                </label>
+                <div class="input-box">
+                    <input type="number" id="beratInput" placeholder="Masukkan berat" min="10" max="300" step="0.1" value="65">
+                    <span class="unit-tag mono">kg</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn btn-primary" onclick="hitungBMI(true)">
+                    Hitung Indeks
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                    Reset
+                </button>
+            </div>
+        </section>
+
+        <!-- Right Column: Diagnostic Readout -->
+        <section class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Hasil Diagnostik</span>
+                <span id="metaDimension" class="mono" style="font-size: 0.78rem; color: var(--text-tertiary);">170 cm · 65 kg</span>
+            </div>
+
+            <div class="result-top">
+                <div>
+                    <div class="score-caption">Indeks Massa Tubuh (BMI)</div>
+                    <div>
+                        <span id="bmiScore" class="score-value mono">22.5</span>
+                        <span class="score-unit mono">kg/m²</span>
+                    </div>
+                </div>
+                <div id="statusBadge" class="status-pill normal">
+                    <span class="status-dot"></span>
+                    <span id="statusText">Normal / Ideal</span>
+                </div>
+            </div>
+
+            <!-- Spectrum Scale Bar -->
+            <div class="spectrum-section">
+                <div class="spectrum-track-wrapper">
+                    <div id="spectrumPin" class="spectrum-pointer" style="left: 40%;">
+                        <div class="pointer-badge mono" id="pinBadge">22.5</div>
+                        <div class="pointer-arrow"></div>
+                    </div>
+                    <div class="spectrum-track">
+                        <div class="track-seg seg-1"></div>
+                        <div class="track-seg seg-2"></div>
+                        <div class="track-seg seg-3"></div>
+                        <div class="track-seg seg-4"></div>
+                    </div>
+                </div>
+                <div class="spectrum-ticks mono">
+                    <span><span>12</span><span>18.5</span></span>
+                    <span><span></span><span>25.0</span></span>
+                    <span><span></span><span>30.0</span></span>
+                    <span><span></span><span>38+</span></span>
+                </div>
+            </div>
+
+            <!-- Sub-metrics Bento -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Rentang Berat Ideal</div>
+                    <div id="idealRange" class="metric-val mono">53.5 – 72.0 kg</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Evaluasi Target</div>
+                    <div id="targetDelta" class="metric-val mono">Proporsi Optimal</div>
+                </div>
+            </div>
+
+            <div id="clinicalNote" class="clinical-note">
+                <strong>Rekomendasi:</strong> Proporsi berat dan tinggi badan berada pada titik optimal. Pertahankan asupan nutrisi seimbang dan aktivitas fisik rutin.
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Panel: History -->
+    <section class="panel history-panel">
+        <div class="panel-header">
+            <span class="panel-title">Log Riwayat Pengukuran</span>
+            <button type="button" id="clearHistoryBtn" class="btn-ghost-danger" onclick="hapusSemuaRiwayat()">
+                Bersihkan Riwayat
+            </button>
+        </div>
+        <div id="historyContainer" class="history-list"></div>
+    </section>
+</div>
+
+<!-- Hubungkan ke file JavaScript eksternal -->
+<script src="src/script.js"></script>
+</body>
+</html>
